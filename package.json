@@ -1,9 +1,21 @@
 {
+	"author": {
+		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
 	"authors": [
 		"Tauri Programme within The Commons Conservancy"
 	],
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/TauriPluginHTTP/issues"
+	},
 	"dependencies": {
 		"@tauri-apps/api": "2.0.0-beta.8"
+	},
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6"
 	},
 	"exports": {
 		"import": "./dist-js/index.js",
@@ -15,11 +27,28 @@
 		"README.md",
 		"LICENSE"
 	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/TauriPluginHTTP#readme",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
 	"main": "./dist-js/index.cjs",
 	"module": "./dist-js/index.js",
 	"name": "@tauri-apps/plugin-http",
-	"scripts": {
-		"build": "rollup -c"
+	"private": false,
+	"publishConfig": {
+		"access": "public"
 	},
-	"types": "./dist-js/index.d.ts"
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/TauriPluginHTTP.git"
+	},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"build": "rollup -c",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"type": "module",
+	"types": "./dist-js/index.d.ts",
+	"version": "0.0.1"
 }
