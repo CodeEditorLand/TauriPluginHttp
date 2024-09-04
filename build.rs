@@ -55,14 +55,15 @@ impl From<HttpScopeEntry> for scope::Entry {
 			HttpScopeEntry::Object { url } => url,
 		};
 
-		scope::Entry {
-			url: urlpattern::UrlPattern::parse(
-				urlpattern::UrlPatternInit::parse_constructor_string::<regex::Regex>(&url, None)
-					.unwrap(),
-			)
-			.unwrap(),
-		}
-	}
+        scope::Entry {
+            url: urlpattern::UrlPattern::parse(
+                urlpattern::UrlPatternInit::parse_constructor_string::<regex::Regex>(&url, None)
+                    .unwrap(),
+                Default::default(),
+            )
+            .unwrap(),
+        }
+    }
 }
 
 fn main() {
