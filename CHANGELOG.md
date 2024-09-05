@@ -1,5 +1,17 @@
 # Changelog
 
+## \[2.0.0-rc.3]
+
+### Dependencies
+
+- Upgraded to `fs@2.0.0-rc.3`
+
+## \[2.0.0-rc.2]
+
+### Dependencies
+
+- Upgraded to `fs@2.0.0-rc.2`
+
 ## \[2.0.0-rc.2]
 
 - [`e2e97db5`](https://github.com/tauri-apps/plugins-workspace/commit/e2e97db51983267f5be84d4f6f0278d58834d1f5) ([#1701](https://github.com/tauri-apps/plugins-workspace/pull/1701) by [@lucasfernog](https://github.com/tauri-apps/plugins-workspace/../../lucasfernog)) Update to tauri 2.0.0-rc.8
@@ -293,6 +305,6 @@
   lpha release!
   !
   371\)) First v2 alpha release!
-ha release!
+  ha release!
   !
   371\)) First v2 alpha release!
