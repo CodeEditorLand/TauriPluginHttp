@@ -3,7 +3,7 @@
 		"Tauri Programme within The Commons Conservancy"
 	],
 	"dependencies": {
-		"@tauri-apps/api": "2.0.0-rc.4"
+		"@tauri-apps/api": "2.0.0-rc.5"
 	},
 	"exports": {
 		"import": "./dist-js/index.js",
