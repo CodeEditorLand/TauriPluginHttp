@@ -26,7 +26,7 @@
 		"build": "rollup -c"
 	},
 	"dependencies": {
-		"@tauri-apps/api": "^2.0.0-rc.4"
+		"@tauri-apps/api": "2.0.0-rc.4"
 	},
 	"authors": [
 		"Tauri Programme within The Commons Conservancy"
