@@ -2,13 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use std::{
-	collections::HashMap,
-	future::Future,
-	pin::Pin,
-	sync::Arc,
-	time::Duration,
-};
+use std::{collections::HashMap, future::Future, pin::Pin, sync::Arc, time::Duration};
 
 use http::{header, HeaderName, Method, StatusCode};
 use reqwest::{redirect::Policy, NoProxy};
@@ -33,8 +27,7 @@ use crate::{
 	Result,
 };
 
-const HTTP_USER_AGENT:&str =
-	concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
+const HTTP_USER_AGENT:&str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
 struct ReqwestResponse(reqwest::Response);
 impl tauri::Resource for ReqwestResponse {}
@@ -139,8 +132,7 @@ fn proxy_creator(
 		UrlOrConfig::Config(ProxyConfig { url, basic_auth, no_proxy }) => {
 			let mut proxy = proxy_fn(url)?;
 			if let Some(basic_auth) = basic_auth {
-				proxy = proxy
-					.basic_auth(&basic_auth.username, &basic_auth.password);
+				proxy = proxy.basic_auth(&basic_auth.username, &basic_auth.password);
 			}
 			if let Some(no_proxy) = no_proxy {
 				proxy = proxy.no_proxy(NoProxy::from_string(&no_proxy));
@@ -182,15 +174,8 @@ pub async fn fetch<R:Runtime>(
 	command_scope:CommandScope<Entry>,
 	global_scope:GlobalScope<Entry>,
 ) -> crate::Result<ResourceId> {
-	let ClientConfig {
-		method,
-		url,
-		headers,
-		data,
-		connect_timeout,
-		max_redirections,
-		proxy,
-	} = client_config;
+	let ClientConfig { method, url, headers, data, connect_timeout, max_redirections, proxy } =
+		client_config;
 
 	let scheme = url.scheme();
 	let method = Method::from_bytes(method.as_bytes())?;
@@ -199,24 +184,15 @@ pub async fn fetch<R:Runtime>(
 	match scheme {
 		"http" | "https" => {
 			if Scope::new(
-				command_scope
-					.allows()
-					.iter()
-					.chain(global_scope.allows())
-					.collect(),
-				command_scope
-					.denies()
-					.iter()
-					.chain(global_scope.denies())
-					.collect(),
+				command_scope.allows().iter().chain(global_scope.allows()).collect(),
+				command_scope.denies().iter().chain(global_scope.denies()).collect(),
 			)
 			.is_allowed(&url)
 			{
 				let mut builder = reqwest::ClientBuilder::new();
 
 				if let Some(timeout) = connect_timeout {
-					builder =
-						builder.connect_timeout(Duration::from_millis(timeout));
+					builder = builder.connect_timeout(Duration::from_millis(timeout));
 				}
 
 				if let Some(max_redirections) = max_redirections {
@@ -233,8 +209,7 @@ pub async fn fetch<R:Runtime>(
 
 				#[cfg(feature = "cookies")]
 				{
-					builder =
-						builder.cookie_provider(state.cookies_jar.clone());
+					builder = builder.cookie_provider(state.cookies_jar.clone());
 				}
 
 				let mut request = builder.build()?.request(method.clone(), url);
@@ -251,9 +226,7 @@ pub async fn fetch<R:Runtime>(
 
 				// POST and PUT requests should always have a 0 length
 				// content-length, if there is no body. https://fetch.spec.whatwg.org/#http-network-or-cache-fetch
-				if data.is_none()
-					&& matches!(method, Method::POST | Method::PUT)
-				{
+				if data.is_none() && matches!(method, Method::POST | Method::PUT) {
 					request = request.header(header::CONTENT_LENGTH, 0);
 				}
 
@@ -261,23 +234,19 @@ pub async fn fetch<R:Runtime>(
 					// https://fetch.spec.whatwg.org/#http-network-or-cache-fetch step 18
 					// If httpRequest’s header list contains `Range`, then
 					// append (`Accept-Encoding`, `identity`)
-					request =
-						request.header(header::ACCEPT_ENCODING, "identity");
+					request = request.header(header::ACCEPT_ENCODING, "identity");
 				}
 
 				if !headers.contains_key(header::USER_AGENT.as_str()) {
-					request =
-						request.header(header::USER_AGENT, HTTP_USER_AGENT);
+					request = request.header(header::USER_AGENT, HTTP_USER_AGENT);
 				}
 
 				if cfg!(feature = "unsafe-headers")
 					&& !headers.contains_key(header::ORIGIN.as_str())
 				{
 					if let Ok(url) = webview.url() {
-						request = request.header(
-							header::ORIGIN,
-							url.origin().ascii_serialization(),
-						);
+						request =
+							request.header(header::ORIGIN, url.origin().ascii_serialization());
 					}
 				}
 
@@ -285,8 +254,7 @@ pub async fn fetch<R:Runtime>(
 					request = request.body(data);
 				}
 
-				let fut =
-					async move { request.send().await.map_err(Into::into) };
+				let fut = async move { request.send().await.map_err(Into::into) };
 				let mut resources_table = webview.resources_table();
 				let rid = resources_table.add_request(Box::pin(fut));
 
@@ -296,11 +264,9 @@ pub async fn fetch<R:Runtime>(
 			}
 		},
 		"data" => {
-			let data_url = data_url::DataUrl::process(url.as_str())
-				.map_err(|_| Error::DataUrlError)?;
-			let (body, _) = data_url
-				.decode_to_vec()
-				.map_err(|_| Error::DataUrlDecodeError)?;
+			let data_url =
+				data_url::DataUrl::process(url.as_str()).map_err(|_| Error::DataUrlError)?;
+			let (body, _) = data_url.decode_to_vec().map_err(|_| Error::DataUrlDecodeError)?;
 
 			let response = http::Response::builder()
 				.status(StatusCode::OK)
@@ -317,10 +283,7 @@ pub async fn fetch<R:Runtime>(
 }
 
 #[command]
-pub fn fetch_cancel<R:Runtime>(
-	webview:Webview<R>,
-	rid:ResourceId,
-) -> crate::Result<()> {
+pub fn fetch_cancel<R:Runtime>(webview:Webview<R>, rid:ResourceId) -> crate::Result<()> {
 	let mut resources_table = webview.resources_table();
 	let req = resources_table.get::<FetchRequest>(rid)?;
 	let abort_tx = resources_table.take::<AbortSender>(req.abort_tx_rid)?;
@@ -338,8 +301,7 @@ pub async fn fetch_send<R:Runtime>(
 	let (req, abort_rx) = {
 		let mut resources_table = webview.resources_table();
 		let req = resources_table.get::<FetchRequest>(rid)?;
-		let abort_rx =
-			resources_table.take::<AbortRecveiver>(req.abort_rx_rid)?;
+		let abort_rx = resources_table.take::<AbortRecveiver>(req.abort_rx_rid)?;
 		(req, abort_rx)
 	};
 
@@ -362,10 +324,7 @@ pub async fn fetch_send<R:Runtime>(
 	let url = res.url().to_string();
 	let mut headers = Vec::new();
 	for (key, val) in res.headers().iter() {
-		headers.push((
-			key.as_str().into(),
-			String::from_utf8(val.as_bytes().to_vec())?,
-		));
+		headers.push((key.as_str().into(), String::from_utf8(val.as_bytes().to_vec())?));
 	}
 
 	let mut resources_table = webview.resources_table();
