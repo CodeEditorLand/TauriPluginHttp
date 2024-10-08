@@ -44,11 +44,11 @@ data-url = "0.3"
 
 [features]
 default = [
-	"rustls-tls",
-	"http2",
-	"charset",
-	"macos-system-configuration",
-	"cookies",
+  "rustls-tls",
+  "http2",
+  "charset",
+  "macos-system-configuration",
+  "cookies",
 ]
 multipart = ["reqwest/multipart"]
 json = ["reqwest/json"]
