@@ -1,22 +1,19 @@
 ## Default Permission
 
-This permission set configures what kind of
-fetch operations are available from the http plugin.
+This permission set configures what kind of fetch operations are available from
+the http plugin.
 
-This enables all fetch operations but does not
-allow explicitly any origins to be fetched. This needs to
-be manually configured before usage.
+This enables all fetch operations but does not allow explicitly any origins to
+be fetched. This needs to be manually configured before usage.
 
 #### Granted Permissions
 
 All fetch operations are enabled.
 
-
-
-- `allow-fetch`
-- `allow-fetch-cancel`
-- `allow-fetch-read-body`
-- `allow-fetch-send`
+-   `allow-fetch`
+-   `allow-fetch-cancel`
+-   `allow-fetch-read-body`
+-   `allow-fetch-send`
 
 ## Permission Table
 
@@ -25,7 +22,6 @@ All fetch operations are enabled.
 <th>Identifier</th>
 <th>Description</th>
 </tr>
-
 
 <tr>
 <td>

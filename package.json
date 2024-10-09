@@ -1,25 +1,25 @@
 {
-	"authors": [
-		"Tauri Programme within The Commons Conservancy"
-	],
-	"dependencies": {
-		"@tauri-apps/api": "2.0.2"
-	},
+	"name": "@tauri-apps/plugin-http",
 	"exports": {
 		"import": "./dist-js/index.js",
 		"require": "./dist-js/index.cjs",
 		"types": "./dist-js/index.d.ts"
 	},
+	"main": "./dist-js/index.cjs",
+	"module": "./dist-js/index.js",
+	"types": "./dist-js/index.d.ts",
 	"files": [
 		"dist-js",
 		"README.md",
 		"LICENSE"
 	],
-	"main": "./dist-js/index.cjs",
-	"module": "./dist-js/index.js",
-	"name": "@tauri-apps/plugin-http",
 	"scripts": {
 		"build": "rollup -c"
 	},
-	"types": "./dist-js/index.d.ts"
+	"dependencies": {
+		"@tauri-apps/api": "2.0.2"
+	},
+	"authors": [
+		"Tauri Programme within The Commons Conservancy"
+	]
 }
