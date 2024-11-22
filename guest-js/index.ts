@@ -108,12 +108,15 @@ export async function fetch(
 ): Promise<Response> {
 	// abort early here if needed
 	const signal = init?.signal;
+
 	if (signal?.aborted) {
 		throw new Error(ERROR_REQUEST_CANCELLED);
 	}
 
 	const maxRedirections = init?.maxRedirections;
+
 	const connectTimeout = init?.connectTimeout;
+
 	const proxy = init?.proxy;
 
 	// Remove these fields before creating the request
@@ -130,7 +133,9 @@ export async function fetch(
 		: new Headers();
 
 	const req = new Request(input, init);
+
 	const buffer = await req.arrayBuffer();
+
 	const data =
 		buffer.byteLength !== 0 ? Array.from(new Uint8Array(buffer)) : null;
 
@@ -183,6 +188,7 @@ export async function fetch(
 		// we don't care about the result of this proimse
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		abort();
+
 		throw new Error(ERROR_REQUEST_CANCELLED);
 	}
 
