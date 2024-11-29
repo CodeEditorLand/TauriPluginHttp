@@ -27,6 +27,7 @@ export interface ProxyConfig {
 	 */
 	basicAuth?: {
 		username: string;
+
 		password: string;
 	};
 	/**

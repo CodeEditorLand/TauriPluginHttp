@@ -58,6 +58,7 @@ export interface ProxyConfig {
 	 */
 	basicAuth?: {
 		username: string;
+
 		password: string;
 	};
 	/**
@@ -122,7 +123,9 @@ export async function fetch(
 	// Remove these fields before creating the request
 	if (init) {
 		delete init.maxRedirections;
+
 		delete init.connectTimeout;
+
 		delete init.proxy;
 	}
 
@@ -196,9 +199,13 @@ export async function fetch(
 
 	interface FetchSendResponse {
 		status: number;
+
 		statusText: string;
+
 		headers: [[string, string]];
+
 		url: string;
+
 		rid: number;
 	}
 
@@ -238,6 +245,7 @@ export async function fetch(
 	// constructor, it removes url and some headers
 	// like `set-cookie` headers
 	Object.defineProperty(res, "url", { value: url });
+
 	Object.defineProperty(res, "headers", {
 		value: new Headers(responseHeaders),
 	});
