@@ -55,12 +55,15 @@ trait AddRequest {
 impl AddRequest for ResourceTable {
     fn add_request(&mut self, fut: CancelableResponseFuture) -> ResourceId {
         let (tx, rx) = channel::<()>();
+
         let (tx, rx) = (AbortSender(tx), AbortRecveiver(rx));
+
         let req = FetchRequest {
             fut: Mutex::new(fut),
             abort_tx_rid: self.add(tx),
             abort_rx_rid: self.add(rx),
         };
+
         self.add(req)
     }
 }
@@ -130,12 +133,15 @@ fn proxy_creator(
             no_proxy,
         }) => {
             let mut proxy = proxy_fn(url)?;
+
             if let Some(basic_auth) = basic_auth {
                 proxy = proxy.basic_auth(&basic_auth.username, &basic_auth.password);
             }
+
             if let Some(no_proxy) = no_proxy {
                 proxy = proxy.no_proxy(NoProxy::from_string(&no_proxy));
             }
+
             Ok(proxy)
         }
     }
@@ -149,16 +155,19 @@ fn attach_proxy(
 
     if let Some(all) = all {
         let proxy = proxy_creator(all, reqwest::Proxy::all)?;
+
         builder = builder.proxy(proxy);
     }
 
     if let Some(http) = http {
         let proxy = proxy_creator(http, reqwest::Proxy::http)?;
+
         builder = builder.proxy(proxy);
     }
 
     if let Some(https) = https {
         let proxy = proxy_creator(https, reqwest::Proxy::https)?;
+
         builder = builder.proxy(proxy);
     }
 
@@ -184,9 +193,11 @@ pub async fn fetch<R: Runtime>(
     } = client_config;
 
     let scheme = url.scheme();
+
     let method = Method::from_bytes(method.as_bytes())?;
 
     let mut headers = HeaderMap::new();
+
     for (h, v) in headers_raw {
         let name = HeaderName::from_str(&h)?;
         #[cfg(not(feature = "unsafe-headers"))]
@@ -194,8 +205,10 @@ pub async fn fetch<R: Runtime>(
             #[cfg(debug_assertions)]
             {
                 eprintln!("[\x1b[33mWARNING\x1b[0m] Skipping {name} header as it is a forbidden header per fetch spec https://fetch.spec.whatwg.org/#terminology-headers");
+
                 eprintln!("[\x1b[33mWARNING\x1b[0m] if keeping the header is a desired behavior, you can enable `unsafe-headers` feature flag in your Cargo.toml");
             }
+
             continue;
         }
 
@@ -287,7 +300,9 @@ pub async fn fetch<R: Runtime>(
                 tracing::trace!("{:?}", request);
 
                 let fut = async move { request.send().await.map_err(Into::into) };
+
                 let mut resources_table = webview.resources_table();
+
                 let rid = resources_table.add_request(Box::pin(fut));
 
                 Ok(rid)
@@ -298,6 +313,7 @@ pub async fn fetch<R: Runtime>(
         "data" => {
             let data_url =
                 data_url::DataUrl::process(url.as_str()).map_err(|_| Error::DataUrlError)?;
+
             let (body, _) = data_url
                 .decode_to_vec()
                 .map_err(|_| Error::DataUrlDecodeError)?;
@@ -311,10 +327,14 @@ pub async fn fetch<R: Runtime>(
             tracing::trace!("{:?}", response);
 
             let fut = async move { Ok(reqwest::Response::from(response)) };
+
             let mut resources_table = webview.resources_table();
+
             let rid = resources_table.add_request(Box::pin(fut));
+
             Ok(rid)
         }
+
         _ => Err(Error::SchemeNotSupport(scheme.to_string())),
     }
 }
@@ -322,11 +342,15 @@ pub async fn fetch<R: Runtime>(
 #[command]
 pub fn fetch_cancel<R: Runtime>(webview: Webview<R>, rid: ResourceId) -> crate::Result<()> {
     let mut resources_table = webview.resources_table();
+
     let req = resources_table.get::<FetchRequest>(rid)?;
+
     let abort_tx = resources_table.take::<AbortSender>(req.abort_tx_rid)?;
+
     if let Some(abort_tx) = Arc::into_inner(abort_tx) {
         abort_tx.abort();
     }
+
     Ok(())
 }
 
@@ -337,7 +361,9 @@ pub async fn fetch_send<R: Runtime>(
 ) -> crate::Result<FetchResponse> {
     let (req, abort_rx) = {
         let mut resources_table = webview.resources_table();
+
         let req = resources_table.get::<FetchRequest>(rid)?;
+
         let abort_rx = resources_table.take::<AbortRecveiver>(req.abort_rx_rid)?;
         (req, abort_rx)
     };
@@ -352,7 +378,9 @@ pub async fn fetch_send<R: Runtime>(
         res = fut.as_mut() => res?,
         _ = abort_rx.0 => {
             let mut resources_table = webview.resources_table();
+
             resources_table.close(rid)?;
+
             return Err(Error::RequestCanceled);
         }
     };
@@ -361,8 +389,11 @@ pub async fn fetch_send<R: Runtime>(
     tracing::trace!("{:?}", res);
 
     let status = res.status();
+
     let url = res.url().to_string();
+
     let mut headers = Vec::new();
+
     for (key, val) in res.headers().iter() {
         headers.push((
             key.as_str().into(),
@@ -371,6 +402,7 @@ pub async fn fetch_send<R: Runtime>(
     }
 
     let mut resources_table = webview.resources_table();
+
     let rid = resources_table.add(ReqwestResponse(res));
 
     Ok(FetchResponse {
@@ -389,9 +421,12 @@ pub(crate) async fn fetch_read_body<R: Runtime>(
 ) -> crate::Result<tauri::ipc::Response> {
     let res = {
         let mut resources_table = webview.resources_table();
+
         resources_table.take::<ReqwestResponse>(rid)?
     };
+
     let res = Arc::into_inner(res).unwrap().0;
+
     Ok(tauri::ipc::Response::new(res.bytes().await?.to_vec()))
 }
 
@@ -421,6 +456,7 @@ fn is_unsafe_header(header: &HeaderName) -> bool {
             | header::VIA
     ) || {
         let lower = header.as_str().to_lowercase();
+
         lower.starts_with("proxy-") || lower.starts_with("sec-")
     }
 }

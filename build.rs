@@ -55,6 +55,7 @@ fn _f() {
 		scope::EntryRaw::Value(url) => HttpScopeEntry::Value(url),
 		scope::EntryRaw::Object { url } => HttpScopeEntry::Object { url },
 	};
+
 	match HttpScopeEntry::Value(String::new()) {
 		HttpScopeEntry::Value(url) => scope::EntryRaw::Value(url),
 		HttpScopeEntry::Object { url } => scope::EntryRaw::Object { url },
