@@ -3,8 +3,9 @@
 		"Tauri Programme within The Commons Conservancy"
 	],
 	"dependencies": {
-		"@tauri-apps/api": "2.1.1"
+		"@codeeditorland/api": "2.1.1"
 	},
+	"devDependencies": {},
 	"exports": {
 		"import": "./dist-js/index.js",
 		"require": "./dist-js/index.cjs",
@@ -17,7 +18,7 @@
 	],
 	"main": "./dist-js/index.cjs",
 	"module": "./dist-js/index.js",
-	"name": "@tauri-apps/plugin-http",
+	"name": "@codeeditorland/plugin-http",
 	"scripts": {
 		"build": "rollup -c"
 	},
