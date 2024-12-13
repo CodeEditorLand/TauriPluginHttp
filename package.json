@@ -1,5 +1,5 @@
 {
-	"name": "@tauri-apps/plugin-http",
+	"name": "@codeeditorland/plugin-http",
 	"exports": {
 		"import": "./dist-js/index.js",
 		"require": "./dist-js/index.cjs",
@@ -17,8 +17,9 @@
 		"build": "rollup -c"
 	},
 	"dependencies": {
-		"@tauri-apps/api": "^2.1.1"
+		"@codeeditorland/api": "^2.1.1"
 	},
+	"devDependencies": {},
 	"authors": [
 		"Tauri Programme within The Commons Conservancy"
 	]
