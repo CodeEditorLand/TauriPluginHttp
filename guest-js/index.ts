@@ -15,8 +15,8 @@
  *   "permissions": [
  *     {
  *       "identifier": "http:default",
- *       "allow": [{ "url": "https://*.tauri.app" }],
- *       "deny": [{ "url": "https://private.tauri.app" }]
+ *       "allow": [{ "url": "HTTPS://*.tauri.app" }],
+ *       "deny": [{ "url": "HTTPS://private.tauri.app" }]
  *     }
  *   ]
  * }
