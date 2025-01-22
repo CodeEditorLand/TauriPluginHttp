@@ -50,11 +50,13 @@ async function fetch(input, init) {
     const maxRedirections = init?.maxRedirections;
     const connectTimeout = init?.connectTimeout;
     const proxy = init?.proxy;
+    const danger = init?.danger;
     // Remove these fields before creating the request
     if (init) {
         delete init.maxRedirections;
         delete init.connectTimeout;
         delete init.proxy;
+        delete init.danger;
     }
     const headers = init?.headers
         ? init.headers instanceof Headers
@@ -95,7 +97,8 @@ async function fetch(input, init) {
             data,
             maxRedirections,
             connectTimeout,
-            proxy
+            proxy,
+            danger
         }
     });
     const abort = () => invoke('plugin:http|fetch_cancel', { rid });
