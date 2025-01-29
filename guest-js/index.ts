@@ -74,17 +74,37 @@ export interface ProxyConfig {
  * @since 2.0.0
  */
 export interface ClientOptions {
-	/**
-	 * Defines the maximum number of redirects the client should follow.
-	 * If set to 0, no redirects will be followed.
-	 */
-	maxRedirections?: number;
-	/** Timeout in milliseconds */
-	connectTimeout?: number;
-	/**
-	 * Configuration of a proxy that a Client should pass requests to.
-	 */
-	proxy?: Proxy;
+  /**
+   * Defines the maximum number of redirects the client should follow.
+   * If set to 0, no redirects will be followed.
+   */
+  maxRedirections?: number
+  /** Timeout in milliseconds */
+  connectTimeout?: number
+  /**
+   * Configuration of a proxy that a Client should pass requests to.
+   */
+  proxy?: Proxy
+  /**
+   * Configuration for dangerous settings on the client such as disabling SSL verification.
+   */
+  danger?: DangerousSettings
+}
+
+/**
+ * Configuration for dangerous settings on the client such as disabling SSL verification.
+ *
+ * @since 2.3.0
+ */
+export interface DangerousSettings {
+  /**
+   * Disables SSL verification.
+   */
+  acceptInvalidCerts?: boolean
+  /**
+   * Disables hostname verification.
+   */
+  acceptInvalidHostnames?: boolean
 }
 
 const ERROR_REQUEST_CANCELLED = "Request canceled";
@@ -110,11 +130,18 @@ export async function fetch(
 	// abort early here if needed
 	const signal = init?.signal;
 
-	if (signal?.aborted) {
-		throw new Error(ERROR_REQUEST_CANCELLED);
-	}
+  const maxRedirections = init?.maxRedirections
+  const connectTimeout = init?.connectTimeout
+  const proxy = init?.proxy
+  const danger = init?.danger
 
-	const maxRedirections = init?.maxRedirections;
+  // Remove these fields before creating the request
+  if (init) {
+    delete init.maxRedirections
+    delete init.connectTimeout
+    delete init.proxy
+    delete init.danger
+  }
 
 	const connectTimeout = init?.connectTimeout;
 
@@ -135,7 +162,18 @@ export async function fetch(
 			: new Headers(init.headers)
 		: new Headers();
 
-	const req = new Request(input, init);
+  const rid = await invoke<number>('plugin:http|fetch', {
+    clientConfig: {
+      method: req.method,
+      url: req.url,
+      headers: mappedHeaders,
+      data,
+      maxRedirections,
+      connectTimeout,
+      proxy,
+      danger
+    }
+  })
 
 	const buffer = await req.arrayBuffer();
 

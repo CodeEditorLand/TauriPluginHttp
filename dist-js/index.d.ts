@@ -42,17 +42,36 @@ export interface ProxyConfig {
  * @since 2.0.0
  */
 export interface ClientOptions {
-	/**
-	 * Defines the maximum number of redirects the client should follow.
-	 * If set to 0, no redirects will be followed.
-	 */
-	maxRedirections?: number;
-	/** Timeout in milliseconds */
-	connectTimeout?: number;
-	/**
-	 * Configuration of a proxy that a Client should pass requests to.
-	 */
-	proxy?: Proxy;
+    /**
+     * Defines the maximum number of redirects the client should follow.
+     * If set to 0, no redirects will be followed.
+     */
+    maxRedirections?: number;
+    /** Timeout in milliseconds */
+    connectTimeout?: number;
+    /**
+     * Configuration of a proxy that a Client should pass requests to.
+     */
+    proxy?: Proxy;
+    /**
+     * Configuration for dangerous settings on the client such as disabling SSL verification.
+     */
+    danger?: DangerousSettings;
+}
+/**
+ * Configuration for dangerous settings on the client such as disabling SSL verification.
+ *
+ * @since 2.3.0
+ */
+export interface DangerousSettings {
+    /**
+     * Disables SSL verification.
+     */
+    acceptInvalidCerts?: boolean;
+    /**
+     * Disables hostname verification.
+     */
+    acceptInvalidHostnames?: boolean;
 }
 /**
  * Fetch a resource from the network. It returns a `Promise` that resolves to the
