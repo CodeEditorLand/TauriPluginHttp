@@ -25,8 +25,8 @@ tauri-plugin = { workspace = true, features = ["build"] }
 schemars = { workspace = true }
 serde = { workspace = true }
 url = { workspace = true }
-urlpattern = { version = "0.3" }
-regex = { version = "1" }
+urlpattern = "0.3"
+regex = "1"
 
 [dependencies]
 serde = { workspace = true }
@@ -35,9 +35,9 @@ tauri = { workspace = true }
 thiserror = { workspace = true }
 tokio = { version = "1", features = ["sync", "macros"] }
 tauri-plugin-fs = { path = "../fs", version = "2.2.0" }
-urlpattern = { version = "0.3" }
-regex = { version = "1" }
-http = { version = "1" }
+urlpattern = "0.3"
+regex = "1"
+http = "1"
 reqwest = { version = "0.12", default-features = false }
 url = { workspace = true }
 data-url = "0.3"
@@ -45,11 +45,11 @@ tracing = { workspace = true, optional = true }
 
 [features]
 default = [
-	"rustls-tls",
-	"http2",
-	"charset",
-	"macos-system-configuration",
-	"cookies",
+  "rustls-tls",
+  "http2",
+  "charset",
+  "macos-system-configuration",
+  "cookies",
 ]
 multipart = ["reqwest/multipart"]
 json = ["reqwest/json"]
