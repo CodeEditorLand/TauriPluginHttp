@@ -1,49 +1,32 @@
-[package]
-name = "tauri-plugin-http"
-version = "2.3.0"
-description = "Access an HTTP client written in Rust."
-edition = { workspace = true }
-authors = { workspace = true }
-license = { workspace = true }
-rust-version = { workspace = true }
-repository = { workspace = true }
-links = "tauri-plugin-http"
-
-[package.metadata.docs.rs]
-rustc-args = ["--cfg", "docsrs"]
-rustdoc-args = ["--cfg", "docsrs"]
-
-[package.metadata.platforms.support]
-windows = { level = "full", notes = "" }
-linux = { level = "full", notes = "" }
-macos = { level = "full", notes = "" }
-android = { level = "full", notes = "" }
-ios = { level = "full", notes = "" }
-
 [build-dependencies]
-tauri-plugin = { workspace = true, features = ["build"] }
+regex = "1"
 schemars = { workspace = true }
 serde = { workspace = true }
+tauri-plugin = { workspace = true, features = ["build"] }
 url = { workspace = true }
 urlpattern = "0.3"
-regex = "1"
 
 [dependencies]
+data-url = "0.3"
+http = "1"
+regex = "1"
+reqwest = { version = "0.12", default-features = false }
 serde = { workspace = true }
 serde_json = { workspace = true }
 tauri = { workspace = true }
+tauri-plugin-fs = { path = "../fs", version = "2.2.0" }
 thiserror = { workspace = true }
 tokio = { version = "1", features = ["sync", "macros"] }
-tauri-plugin-fs = { path = "../fs", version = "2.2.0" }
-urlpattern = "0.3"
-regex = "1"
-http = "1"
-reqwest = { version = "0.12", default-features = false }
-url = { workspace = true }
-data-url = "0.3"
 tracing = { workspace = true, optional = true }
+url = { workspace = true }
+urlpattern = "0.3"
 
 [features]
+blocking = ["reqwest/blocking"]
+brotli = ["reqwest/brotli"]
+charset = ["reqwest/charset"]
+cookies = ["reqwest/cookies"]
+dangerous-settings = []
 default = [
   "rustls-tls",
   "http2",
@@ -51,26 +34,52 @@ default = [
   "macos-system-configuration",
   "cookies",
 ]
-multipart = ["reqwest/multipart"]
+deflate = ["reqwest/deflate"]
+gzip = ["reqwest/gzip"]
+http2 = ["reqwest/http2"]
 json = ["reqwest/json"]
-stream = ["reqwest/stream"]
+macos-system-configuration = ["reqwest/macos-system-configuration"]
+multipart = ["reqwest/multipart"]
 native-tls = ["reqwest/native-tls"]
-native-tls-vendored = ["reqwest/native-tls-vendored"]
 native-tls-alpn = ["reqwest/native-tls-alpn"]
+native-tls-vendored = ["reqwest/native-tls-vendored"]
 rustls-tls = ["reqwest/rustls-tls"]
 rustls-tls-manual-roots = ["reqwest/rustls-tls-manual-roots"]
-rustls-tls-webpki-roots = ["reqwest/rustls-tls-webpki-roots"]
 rustls-tls-native-roots = ["reqwest/rustls-tls-native-roots"]
-blocking = ["reqwest/blocking"]
-cookies = ["reqwest/cookies"]
-gzip = ["reqwest/gzip"]
-brotli = ["reqwest/brotli"]
-deflate = ["reqwest/deflate"]
-trust-dns = ["reqwest/trust-dns"]
+rustls-tls-webpki-roots = ["reqwest/rustls-tls-webpki-roots"]
 socks = ["reqwest/socks"]
-http2 = ["reqwest/http2"]
-charset = ["reqwest/charset"]
-macos-system-configuration = ["reqwest/macos-system-configuration"]
-unsafe-headers = []
+stream = ["reqwest/stream"]
 tracing = ["dep:tracing"]
-dangerous-settings = []
+trust-dns = ["reqwest/trust-dns"]
+unsafe-headers = []
+
+[lib]
+path = "Source/lib.rs"
+
+[package]
+authors = { workspace = true }
+description = "Access an HTTP client written in Rust."
+edition = { workspace = true }
+license-file = { workspace = true }
+links = "tauri-plugin-http"
+name = "tauri-plugin-http"
+repository = { workspace = true }
+rust-version = { workspace = true }
+version = "2.3.0"
+
+[package.metadata]
+
+[package.metadata.docs]
+
+[package.metadata.docs.rs]
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs"]
+
+[package.metadata.platforms]
+
+[package.metadata.platforms.support]
+android = { level = "full", notes = "" }
+ios = { level = "full", notes = "" }
+linux = { level = "full", notes = "" }
+macos = { level = "full", notes = "" }
+windows = { level = "full", notes = "" }
